@@ -1,0 +1,113 @@
+<!--
+LUNA CHE CAMMINA - PROTOTIPO HOME PAGE (single-file)
+
+Istruzioni rapide per l'uso (copiare il file .html così com'è e incollarlo in un nuovo file chiamato index.html):
+- Per pubblicarlo GRATIS:
+  1) GitHub Pages: crea un repository pubblico, carica index.html nella root, vai su Settings > Pages e scegli branch main / root. Il sito sarà disponibile su username.github.io/reponame.
+  2) Netlify Drop: trascina il file index.html su app.netlify.com/drop e avrai un sito temporaneo subito online.
+
+Funzionalità incluse:
+- Design responsive (hero full-bleed, serif headings, menu semplice)
+- Sezione "Ultimo spettacolo" con CTA Prenota il posto
+- Modal di prenotazione che salva le prenotazioni in localStorage (nessun backend richiesto)
+- Galleria minimale e footer con contatti e social link
+
+Nota: sostituisci le immagini segnaposto con le tue foto reali (file locale o link esterno).
+-->
+
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Luna che Cammina — homepage</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#f5e7df; /* light peach */
+      --accent:#0b0b0b; /* near-black */
+      --muted:#9b897f;
+      --max-width:1100px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Montserrat,system-ui,-apple-system,"Segoe UI", Roboto, "Helvetica Neue", Arial;
+      color:var(--accent);
+      background:white;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.4;
+    }
+    a{color:inherit;text-decoration:none}
+
+    /* NAV */
+    .nav{background:var(--bg);padding:22px 16px;position:sticky;top:0;z-index:50;border-bottom:1px solid rgba(11,11,11,0.03)}
+    .container{max-width:var(--max-width);margin:0 auto;padding:0 20px}
+    .nav-inner{display:flex;align-items:center;justify-content:space-between}
+    .brand{font-family:Playfair Display, serif;font-size:28px;letter-spacing:1px}
+    .menu{display:flex;gap:20px;font-weight:500}
+    .menu a{padding:6px 2px}
+
+    /* HERO */
+    .hero{position:relative;overflow:hidden}
+    .hero-figure{width:100%;height:68vh;min-height:480px;display:flex;align-items:center;justify-content:center;background:#000}
+    .hero-figure img{width:100%;height:100%;object-fit:cover;object-position:center;opacity:0.98}
+    .hero-content{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;color:#fff;padding:20px}
+    .hero h1{font-family:Playfair Display, serif;font-size:64px;margin:0;line-height:0.9;letter-spacing:2px;text-shadow:0 6px 30px rgba(0,0,0,0.6)}
+    .hero p.lead{margin-top:10px;font-size:18px;opacity:0.95}
+
+    /* Section */
+    section{padding:56px 0}
+    h2.section-title{font-family:Playfair Display, serif;font-size:36px;margin:0 0 18px;text-align:center}
+
+    /* Latest show */
+    .show-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center;max-width:var(--max-width);margin:0 auto;padding:0 20px}
+    .show-card{background:var(--bg);padding:28px;border-radius:8px}
+    .show-card img{width:100%;height:320px;object-fit:cover;border-radius:6px}
+    .show-meta{padding:12px 0}
+    .show-title{font-family:Playfair Display,serif;font-size:34px;margin:0}
+    .show-date{color:var(--muted);margin-top:6px}
+    .btn{display:inline-block;padding:12px 20px;border-radius:8px;border:2px solid var(--accent);background:transparent;font-weight:600;margin-top:12px}
+
+    /* Gallery */
+    .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:var(--max-width);margin:0 auto}
+    .gallery img{width:100%;height:160px;object-fit:cover;border-radius:6px}
+
+    /* Footer */
+    footer{background:#111;color:#fff;padding:40px 0;margin-top:20px}
+    footer .container{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start}
+    .footer-brand{font-family:Playfair Display;font-size:20px}
+    .footer-col{flex:1;min-width:180px}
+    .small{font-size:13px;opacity:0.85}
+
+    /* Modal */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;z-index:200}
+    .modal{background:white;border-radius:10px;max-width:520px;width:94%;padding:22px}
+    .modal h3{margin:0 0 8px;font-family:Playfair Display}
+    .field{margin-top:10px}
+    .field input,.field textarea{width:100%;padding:10px;border:1px solid #ddd;border-radius:6px}
+    .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}
+
+    /* small screens */
+    @media(max-width:900px){
+      .hero h1{font-size:42px}
+      .show-grid{grid-template-columns:1fr;}
+      .gallery{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(max-width:480px){
+      .menu{display:none}
+      .brand{font-size:20px}
+      .hero-figure{height:56vh}
+      .hero h1{font-size:32px}
+      .gallery img{height:120px}
+    }
+  </style>
+</head>
+<body>
+  <h1>Test Luna Che Cammina</h1>
+</body>
+</html>
